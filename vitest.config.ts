@@ -5,7 +5,6 @@ import { resolve } from 'path'
 export default defineVitestConfig({
   resolve: {
     alias: {
-      '~~': resolve(__dirname, '.'),
       '~': resolve(__dirname, '.')
     }
   },

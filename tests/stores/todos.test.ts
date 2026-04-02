@@ -1,7 +1,7 @@
 // AI-generated: GitHub Copilot Agent
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useTodosStore } from '~/stores/todos'
+import { useTodosStore } from '~/app/stores/todos'
 
 const mockFetch = vi.fn()
 vi.stubGlobal('$fetch', mockFetch)

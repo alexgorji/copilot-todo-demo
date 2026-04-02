@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useTodosStore } from '~~/stores/todos'
+import { useTodosStore } from '../stores/todos'
 
 const store = useTodosStore()
 await store.fetchTodos()
