@@ -1,5 +1,5 @@
 // AI-generated: GitHub Copilot Agent
-import prisma from '~/server/utils/prisma'
+import prisma from '~~/server/utils/prisma'
 import { Prisma } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
@@ -13,7 +13,10 @@ export default defineEventHandler(async (event) => {
     await prisma.todo.delete({ where: { id } })
     return { success: true }
   } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === 'P2025'
+    ) {
       throw createError({ statusCode: 404, statusMessage: 'Todo not found' })
     }
     throw err
