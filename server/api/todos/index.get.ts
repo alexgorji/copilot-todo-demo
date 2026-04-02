@@ -1,8 +1,24 @@
 // AI-generated: GitHub Copilot Agent
 import prisma from '~~/server/utils/prisma'
-import { defineEventHandler } from 'h3'
-export default defineEventHandler(async () => {
+import { defineEventHandler, getQuery } from 'h3'
+
+export default defineEventHandler(async (event) => {
+  const query = getQuery(event)
+
+  const orderParam = query.order
+  const order: 'asc' | 'desc' =
+    orderParam === 'asc' || orderParam === 'desc' ? orderParam : 'desc'
+
+  const completedParam = query.completed
+  const where =
+    completedParam === 'true'
+      ? { completed: true }
+      : completedParam === 'false'
+        ? { completed: false }
+        : undefined
+
   return prisma.todo.findMany({
-    orderBy: { createdAt: 'desc' }
+    where,
+    orderBy: { createdAt: order }
   })
 })

@@ -47,7 +47,7 @@ const sampleTodo = { id: 1, title: 'Buy milk', completed: false, createdAt: now,
 describe('GET /api/todos', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('returns all todos ordered by createdAt desc', async () => {
+  it('returns all todos ordered by createdAt desc by default', async () => {
     const { default: prisma } = await import('~/server/utils/prisma')
     const todos = [sampleTodo]
     vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
@@ -56,7 +56,85 @@ describe('GET /api/todos', () => {
     const event = makeEvent('http://localhost/api/todos')
     const result = await handler(event)
 
-    expect(prisma.todo.findMany).toHaveBeenCalledWith({ orderBy: { createdAt: 'desc' } })
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: undefined, orderBy: { createdAt: 'desc' } })
+    expect(result).toEqual(todos)
+  })
+
+  it('filters by completed=true', async () => {
+    const { default: prisma } = await import('~/server/utils/prisma')
+    const todos = [{ ...sampleTodo, completed: true }]
+    vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
+
+    const { default: handler } = await import('~/server/api/todos/index.get')
+    const event = makeEvent('http://localhost/api/todos?completed=true')
+    const result = await handler(event)
+
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: { completed: true }, orderBy: { createdAt: 'desc' } })
+    expect(result).toEqual(todos)
+  })
+
+  it('filters by completed=false', async () => {
+    const { default: prisma } = await import('~/server/utils/prisma')
+    const todos = [sampleTodo]
+    vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
+
+    const { default: handler } = await import('~/server/api/todos/index.get')
+    const event = makeEvent('http://localhost/api/todos?completed=false')
+    const result = await handler(event)
+
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: { completed: false }, orderBy: { createdAt: 'desc' } })
+    expect(result).toEqual(todos)
+  })
+
+  it('orders by createdAt asc when order=asc', async () => {
+    const { default: prisma } = await import('~/server/utils/prisma')
+    const todos = [sampleTodo]
+    vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
+
+    const { default: handler } = await import('~/server/api/todos/index.get')
+    const event = makeEvent('http://localhost/api/todos?order=asc')
+    const result = await handler(event)
+
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: undefined, orderBy: { createdAt: 'asc' } })
+    expect(result).toEqual(todos)
+  })
+
+  it('orders by createdAt desc when order=desc', async () => {
+    const { default: prisma } = await import('~/server/utils/prisma')
+    const todos = [sampleTodo]
+    vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
+
+    const { default: handler } = await import('~/server/api/todos/index.get')
+    const event = makeEvent('http://localhost/api/todos?order=desc')
+    const result = await handler(event)
+
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: undefined, orderBy: { createdAt: 'desc' } })
+    expect(result).toEqual(todos)
+  })
+
+  it('ignores invalid order value and defaults to desc', async () => {
+    const { default: prisma } = await import('~/server/utils/prisma')
+    const todos = [sampleTodo]
+    vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
+
+    const { default: handler } = await import('~/server/api/todos/index.get')
+    const event = makeEvent('http://localhost/api/todos?order=invalid')
+    const result = await handler(event)
+
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: undefined, orderBy: { createdAt: 'desc' } })
+    expect(result).toEqual(todos)
+  })
+
+  it('ignores invalid completed value and returns all todos', async () => {
+    const { default: prisma } = await import('~/server/utils/prisma')
+    const todos = [sampleTodo]
+    vi.mocked(prisma.todo.findMany).mockResolvedValue(todos as never)
+
+    const { default: handler } = await import('~/server/api/todos/index.get')
+    const event = makeEvent('http://localhost/api/todos?completed=maybe')
+    const result = await handler(event)
+
+    expect(prisma.todo.findMany).toHaveBeenCalledWith({ where: undefined, orderBy: { createdAt: 'desc' } })
     expect(result).toEqual(todos)
   })
 })
