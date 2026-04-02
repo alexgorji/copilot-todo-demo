@@ -14,8 +14,10 @@
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@pinia/nuxt": "^0.11.3",
+    "@prisma/adapter-better-sqlite3": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "@types/node": "^25.5.0",
+    "better-sqlite3": "^12.8.0",
     "nuxt": "^4.4.2",
     "pinia": "^3.0.4",
     "prisma": "^7.6.0",

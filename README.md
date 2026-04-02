@@ -29,14 +29,5 @@ npm run build
 ## Notes
 
 - Prisma schema comments must use `//`, not `#`.
-- The SQLite datasource URL is configured in `prisma.config.ts`.
+- With Prisma 7, keep the SQLite datasource URL in `prisma.config.ts` for CLI commands and pass a SQLite driver adapter to `PrismaClient` at runtime.
 - Server API handlers should live under `server/api/` and use Nuxt/Nitro patterns.
-  \*\*\* Add File: /Users/aligorji/Desktop/tasks/mywonderfulcastle/room_it_job/desk_it_job_training_ai/folder_it_job_training_ai_learn_copilot/copilot-todo-demo/vitest.config.ts
-  // AI-generated: GitHub Copilot Agent
-  import { defineVitestConfig } from '@nuxt/test-utils/config'
-
-export default defineVitestConfig({
-test: {
-environment: 'happy-dom'
-}
-})
